@@ -9,6 +9,8 @@ use std::io::prelude::*;
 use url::Url;
 
 const EXTENSIONS: &[&str] = &["png", "jpg", "jpeg", "gif", "webp"];
+const PROMPT_LIMIT: usize = 254;
+const TITLE_LIMIT: usize = 16;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Card {
@@ -82,7 +84,7 @@ fn print_help() {
     );
     let current = format!(
         "{} {}",
-        "\"%SELFT%\"".green(),
+        "\"%SELF%\"".green(),
         "Displays the user whose turn it is currently"
             .cyan()
             .italic()
@@ -108,13 +110,12 @@ fn take_title() -> Option<String> {
             None => return None,
             Some(output) => {
                 let char_count = output.chars().count();
-                let max_len = 16;
 
-                if char_count > max_len {
+                if char_count > TITLE_LIMIT {
                     println!(
                         "{} {} {}",
                         "Your input was".red().bold(),
-                        (char_count - max_len).to_string().red().underline(),
+                        (char_count - TITLE_LIMIT).to_string().red().underline(),
                         "characters too long".red().bold()
                     );
                     continue;
@@ -139,13 +140,12 @@ fn take_text() -> String {
             }
             Some(output) => {
                 let char_count = output.chars().count();
-                let max_len = 256;
 
-                if char_count > max_len {
+                if char_count > PROMPT_LIMIT {
                     println!(
                         "{} {} {}",
                         "Your input was".red().bold(),
-                        (char_count - max_len).to_string().red().underline(),
+                        (char_count - PROMPT_LIMIT).to_string().red().underline(),
                         "characters too long".red().bold()
                     );
                     continue;
